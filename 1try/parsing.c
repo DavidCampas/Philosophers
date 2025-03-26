@@ -54,16 +54,16 @@ static long	ft_atol(const char *str)
 void	parse_input(t_table *table, char *argv)
 {
 	table->num_philo = ft_atol(argv[1]);
-	table->time_to_die(ft_atol(argv[2]) * 1e3); //Convert to milisec
-	table->time_to_eat(ft_atol(argv[3]) * 1e3);
-	table->time_to_sleep(ft_atol(argv[4]) * 1e3);
+	table->time_to_die = ft_atol(argv[2]) * 1e3; //Convert to milisec
+	table->time_to_eat = ft_atol(argv[3]) * 1e3;
+	table->time_to_sleep = ft_atol(argv[4]) * 1e3;
 
 	//Timestamps > 60ms
 	if (table->time_to_die < 6e4 || table->time_to_eat < 6e4 ||
 		table->time_to_sleep < 6e4)
 		error_exit("Use timestamps major that 60ms");
 
-	if (table->num_philosophers <= 0)
+	if (table->num_philo <= 0)
 	{
 		printf("Error: Number of philosophers must be greater than 0.\n");
 		exit(EXIT_FAILURE);

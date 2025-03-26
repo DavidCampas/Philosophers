@@ -14,7 +14,7 @@ int main(int argc, char **argv)
 		data_init(&table);
 		
 		//No leaks -> philos full | 1 died
-		clean(&table);
+		//clean(&table);
 	}
 	else
 	{
