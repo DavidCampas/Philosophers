@@ -13,15 +13,6 @@ void	*safe_malloc(size_t size)
 	return (ptr);
 }
 
-void	safe_mutex_init(pmtx *mutex)
-{
-	if (pthread_mutex_init(mutex, NULL) != 0)
-	{
-		printf("Error: mutex init failed\n");
-		exit(EXIT_FAILURE);
-	}
-}
-
 void	safe_thread_create(pthread_t *thread, void *(*start_routine)(void *), void *arg)
 {
 	if (pthread_create(thread, NULL, start_routine, arg) != 0)
