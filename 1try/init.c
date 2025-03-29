@@ -35,6 +35,8 @@ static void	philo_init(t_table *table)
 		philo->full = false;
 		philo->meals_counter = 0;
 		philo->table = table;
+		safe_mutex_init(&philo->philo_mutex);
+
 		assign_forks(philo, table->forks, table->num_philo);
 		i++;
 	}

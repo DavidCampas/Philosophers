@@ -1,5 +1,33 @@
 #include "philo.h"
 
+static void thinking(t_philo *philo)
+{
+	write_status(THINKING, philo);
+}
+
+static void	eat(t_philo *philo)
+{
+	safe_mutex_lock(philo->table->forks[philo->first_fork]);
+	write_status(TAKE_FIRST_FORK, philo);
+	safe_mutex_lock(philo->table->forks[philo->second_fork]);
+	write_status(TAKE_SECOND_FORK, philo);
+
+	write_status(EATING, philo);
+	set_long(&philo->table->table_mutex, philo->last_meal_time, gettime(MILISECS));
+	precise_usleep(philo->table->time_to_eat, philo->table);
+	philo->meals_counter++;
+
+	safe_mutex_unlock(philo->first_fork);
+	safe_mutex_unlock(philo->second_fork);
+
+	if (philo->meals_counter >= philo->table->nbr_limit_meals
+		&& philo->table->nbr_limit_meals > 0)
+		set_bool(&philo->table->table_mutex, philo->full, true);
+
+	safe_mutex_unlock(&philo->first_fork);
+	safe_mutex_unlock(&philo->second_fork);
+}
+
 void	*dinner_simulation(void *arg)
 {
 	t_philo	*philo = (t_philo *)arg;
@@ -8,29 +36,12 @@ void	*dinner_simulation(void *arg)
 
 	while (!philo->table->end_simulation)
 	{
-		// El filósofo piensa
-		printf("Philosopher %d is thinking.\n", philo->id);
-		usleep(1000);  // Simulación de pensar, por ejemplo, 1ms
+		if (philo->full)
+			break;
+		eat(philo);
 
-		// El filósofo toma los tenedores
-		safe_mutex_lock(&philo->left_fork);
-		printf("Philosopher %d is picking up left fork.\n", philo->id);
-		safe_mutex_lock(&philo->right_fork);
-		printf("Philosopher %d is picking up right forks.\n", philo->id);
-
-		// El filósofo come
-		printf("Philosopher %d is eating.\n", philo->id);
-		usleep(1000);  // Simulación de comer, por ejemplo, 1ms
-
-		// El filósofo deja los tenedores
-		safe_mutex_unlock(&philo->left_fork);
-		printf("Philosopher %d is putting down left fork.\n", philo->id);
-		safe_mutex_unlock(&philo->right_fork);
-		printf("Philosopher %d is putting down right fork.\n", philo->id);
-
-		// El filósofo duerme
-		printf("Philosopher %d is sleeping.\n", philo->id);
-		usleep(1000);  // Simulación de dormir, por ejemplo, 1ms
+		write_status(SLEEPING, philo);
+		precise_usleep(philo->table->time_to_sleep, philo->table)
 	}
 
 	return NULL;

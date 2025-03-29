@@ -62,11 +62,8 @@ void	parse_input(t_table *table, char *argv)
 	if (table->time_to_die < 6e4 || table->time_to_eat < 6e4 ||
 		table->time_to_sleep < 6e4)
 		error_exit("Use timestamps major that 60ms");
-
-	if (table->num_philo <= 0)
-	{
-		printf("Error: Number of philosophers must be greater than 0.\n");
-		exit(EXIT_FAILURE);
-	}
-	
+	if (argv[5])
+		table->nbr_limit_meals = ft_atol(argv[5]);
+	else
+		table->nbr_limit_meals = -1;
 }

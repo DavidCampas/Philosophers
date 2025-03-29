@@ -6,11 +6,14 @@ RM = rm -f
 OBJS = ${SRCS:.c=.o}
 
 SRCS =	main.c\
+		dinner.c\
+		getters_and_setters.c
 		init.c\
 		parsing.c\
 		safe_funcions.c\
-		utils.c\
-		dinner.c
+		safe_mutex\
+		synchro_utils.c\
+		utils.c
 
 HEADER = philo.h
 

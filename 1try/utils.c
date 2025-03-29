@@ -20,6 +20,23 @@ long	gettime(t_time_code time_code)
 	return (1);
 }
 
+void	precise_usleep(long usec, t_table *table)
+{
+	long	start_time;
+	long	elapsed;
+
+	start_time = gettime(MICROSECS);
+	while (!table->end_simulation)
+	{
+			if (simulation_finished(table))
+				break;
+			elapsed = gettime(MICROSECS) - start_time;
+			if (elapsed >= usec)
+				break;
+			usleep(200);
+	}
+}
+
 void	error_exit(const char *error)
 {
 	printf("🚨 %s 🚨\n", error);

@@ -2,9 +2,8 @@
 
 //Module to avoid writing LOCK UNLOCK everywhere
 
-
 //BOOL
-bool	set_bool(pmtx *mutex, bool dest, bool *value)
+void	set_bool(pmtx *mutex, bool dest, bool *value)
 {
 	safe_mutex_lock(mutex);
 	*value = dest;
@@ -16,23 +15,23 @@ bool	get_bool(pmtx *mutex, bool *value)
 	bool	ret;
 
 	safe_mutex_lock(mutex);
-	*value = ret;
+	ret = *value;
 	safe_mutex_unlock(mutex);
 	return (ret);
 }
 
 //LONG
-long	get_long(pmtx *mutex, bool *value)
+long	get_long(pmtx *mutex, long *value)
 {
 	long	ret;
 
 	safe_mutex_lock(mutex);
-	*value = ret;
+	ret = *value;
 	safe_mutex_unlock(mutex);
 	return (ret);
 }
 
-long	set_long(pmtx *mutex, bool dest, bool *value)
+void	set_long(pmtx *mutex, long dest, long *value)
 {
 	safe_mutex_lock(mutex);
 	*value = dest;
