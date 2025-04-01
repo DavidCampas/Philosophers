@@ -5,7 +5,7 @@ static bool	is_digit(char c)
 	return (c >= '0' && c <= '9');
 }
 
-static char	*check_valid(const char *str)
+static void	check_valid(const char *str)
 {
 	long	result;
 
@@ -34,7 +34,6 @@ static char	*check_valid(const char *str)
 		}
 		str++;
 	}
-	return (char *)str;
 }
 
 static long	ft_atol(const char *str)
@@ -42,7 +41,7 @@ static long	ft_atol(const char *str)
 	long	result;
 
 	result = 0;
-	str = check_valid(str);
+	check_valid(str);
 	while (is_digit(*str))
 	{
 		result = result * 10 + (*str - '0');
@@ -51,7 +50,7 @@ static long	ft_atol(const char *str)
 	return (result);
 }
 
-void	parse_input(t_table *table, char *argv)
+void	parse_input(t_table *table, char **argv)
 {
 	table->num_philo = ft_atol(argv[1]);
 	table->time_to_die = ft_atol(argv[2]) * 1e3; //Convert to milisec
@@ -61,7 +60,7 @@ void	parse_input(t_table *table, char *argv)
 	//Timestamps > 60ms
 	if (table->time_to_die < 6e4 || table->time_to_eat < 6e4 ||
 		table->time_to_sleep < 6e4)
-		error_exit("Use timestamps major that 60ms");
+		error_exit("Use timestamps > than 60ms");
 	if (argv[5])
 		table->nbr_limit_meals = ft_atol(argv[5]);
 	else

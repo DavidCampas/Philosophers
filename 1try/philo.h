@@ -59,6 +59,7 @@ typedef struct	s_table
 	t_philo		*philos;
 	pmtx		*forks;
 	pmtx		write_mutex;
+	pmtx		philo_mutex; 
 	pmtx		print_lock;//Evitar que se solapen los msj
 }	t_table;
 
@@ -68,7 +69,7 @@ long	gettime(t_time_code time_code);
 void	precise_usleep(long usec, t_table *table);
 
 //Parsing
-void	parse_input(t_table *table, char *argv);
+void	parse_input(t_table *table, char **argv);
 
 //Synchro utils
 void	wait_all_threads(t_table *table);
@@ -91,5 +92,8 @@ bool	simulation_finished(t_table *table);
 
 //Write
 void	write_status(t_status status, t_philo *philo);
+
+//Init
+void		data_init(t_table *table);
 
 #endif

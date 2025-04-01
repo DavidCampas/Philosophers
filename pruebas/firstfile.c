@@ -9,8 +9,8 @@ pthread_mutex_t forks[N];
 typedef struct philosopher {
 	int id;
 	int	meals;
-	pthread_mutex_t *left_fork;
-	pthread_mutex_t *right_fork;
+	pthread_mutex_t *first_fork;
+	pthread_mutex_t *second_fork;
 } philosopher;
 
 void	think(int id)
@@ -37,27 +37,27 @@ void	*philosopher_routine(void *arg)
 	//Tomar tenedores de mayor a menor
 		if (p->id % 2 == 0)
 		{
-			pthread_mutex_lock(p->left_fork);
-			//printf("Philosopher %d took left fork\n", p->id);
+			pthread_mutex_lock(p->first_fork);
+			//printf("Philosopher %d took first fork\n", p->id);
 			//usleep(1000);
-			pthread_mutex_lock(p->right_fork);
-			//printf("Philosopher %d took right fork\n", p->id);
+			pthread_mutex_lock(p->second_fork);
+			//printf("Philosopher %d took second fork\n", p->id);
 		}
 		else
 		{
-			pthread_mutex_lock(p->right_fork);
-			//printf("Philosopher %d took right fork\n", p->id);
-			pthread_mutex_lock(p->left_fork);
-			//printf("Philosopher %d took left fork\n", p->id);
+			pthread_mutex_lock(p->second_fork);
+			//printf("Philosopher %d took second fork\n", p->id);
+			pthread_mutex_lock(p->first_fork);
+			//printf("Philosopher %d took first fork\n", p->id);
 		}
 
 		eat(p);
 
 	//Liberar tenedores de menor a mayor
-		pthread_mutex_unlock(p->left_fork);
-		//printf("Philosopher %d put down left fork\n", p->id);
-		pthread_mutex_unlock(p->right_fork);
-		//printf("Philosopher %d put down right fork\n", p->id);
+		pthread_mutex_unlock(p->first_fork);
+		//printf("Philosopher %d put down first fork\n", p->id);
+		pthread_mutex_unlock(p->second_fork);
+		//printf("Philosopher %d put down second fork\n", p->id);
 
 		if (p->meals >= 5)
 			break;
@@ -84,8 +84,8 @@ int main()
 	{
 		philo[i].id = i;
 		philo[i].meals = 0;
-		philo[i].left_fork = &forks[i];
-		philo[i].right_fork = &forks[(i + 1) % N];
+		philo[i].first_fork = &forks[i];
+		philo[i].second_fork = &forks[(i + 1) % N];
 		pthread_create(&philosophers[i], NULL, philosopher_routine, &philo[i]);
 		i++;
 	}

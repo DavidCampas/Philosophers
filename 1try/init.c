@@ -10,14 +10,14 @@ static void	assign_forks(t_philo *philo, pmtx *forks, int num_philo)
 
 	if (philo->id % 2 == 0)
 	{
-		philo->right_fork = &forks[i];
+		philo->second_fork = &forks[i];
 
-		philo->left_fork = &forks[(i + 1) % num_philo];
+		philo->first_fork = &forks[(i + 1) % num_philo];
 	}
 	else
 	{
-		philo->left_fork = &forks[i];
-		philo->right_fork = &forks[(i + 1) % num_philo];
+		philo->first_fork = &forks[i];
+		philo->second_fork = &forks[(i + 1) % num_philo];
 	}
 
 }
@@ -48,7 +48,7 @@ void		data_init(t_table *table)
 
 	table->end_simulation = false;
 	table->all_threads_ready = false;
-	table->start_simulation = get_time();
+	table->start_simulation = gettime(MILISECS);
 	table->philos = safe_malloc(sizeof(t_philo) * table->num_philo);
 	safe_mutex_init(&table->table_mutex);
 	table->forks = safe_malloc(sizeof(pmtx) * table->num_philo);

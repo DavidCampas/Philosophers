@@ -10,8 +10,8 @@ typedef struct	s_philosophers
 {
 	int				id; //identificador
 	pthread_t		thread; //hilo del filo
-	pmtx			*left_fork;
-	pmtx			*right_fork;
+	pmtx			*first_fork;
+	pmtx			*second_fork;
 	int				times_ate;
 	int				max_times_eat;
 }	t_philosophers;
@@ -30,27 +30,27 @@ void	eat(int id, t_philosophers *philosopher)
 	// Si es impar, bloquea el tenedor derecho primero
 	if (id % 2 == 0)
 	{
-		pthread_mutex_lock(philosopher->left_fork);
+		pthread_mutex_lock(philosopher->first_fork);
 		printf("Filosofo %d ha cogido el tenedor izquierdo\n", id);
 
-		pthread_mutex_lock(philosopher->right_fork);
+		pthread_mutex_lock(philosopher->second_fork);
 		printf("Filosofo %d ha cogido el tenedor derecho\n", id);
 	}
 	else
 	{
-		pthread_mutex_lock(philosopher->right_fork);
+		pthread_mutex_lock(philosopher->second_fork);
 		printf("Filosofo %d ha cogido el tenedor derecho\n", id);
 
-		pthread_mutex_lock(philosopher->left_fork);
+		pthread_mutex_lock(philosopher->first_fork);
 		printf("Filosofo %d ha cogido el tenedor izquierdo\n", id);
 	}
 
 	printf("Filosofo %d esta comiendo...\n", id);
 	usleep(1000000); // Simula el tiempo comiendo
 
-	pthread_mutex_unlock(philosopher->right_fork);
+	pthread_mutex_unlock(philosopher->second_fork);
 	printf("Filosofo %d ha dejado el tenedor derecho\n", id);
-	pthread_mutex_unlock(philosopher->left_fork);
+	pthread_mutex_unlock(philosopher->first_fork);
 	printf("Filosofo %d ha dejado el tenedor izquierdo\n", id);
 }
 
@@ -94,8 +94,8 @@ int main()
 	while(i < NUM_PHILO)
 	{
 		philosophers[i].id = i;
-		philosophers[i].left_fork = &forks[i];
-		philosophers[i].right_fork = &forks[(i + 1) % NUM_PHILO];
+		philosophers[i].first_fork = &forks[i];
+		philosophers[i].second_fork = &forks[(i + 1) % NUM_PHILO];
 		philosophers[i].times_ate = 0;
 		philosophers[i].max_times_eat = 3;
 		i++;
